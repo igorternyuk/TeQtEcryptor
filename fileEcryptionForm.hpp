@@ -16,6 +16,11 @@ public:
     explicit FileEcryptionForm(QWidget *parent = nullptr);
     ~FileEcryptionForm();
 
+private slots:
+    void on_btnDecrypt_clicked();
+    void on_toolButton_clicked();
+    void on_btnEncrypt_clicked();
+
 private:
     Ui::FileEcryptionForm *ui;
 };

@@ -20,11 +20,13 @@ LIBS += -ldl
 SOURCES += main.cpp\
         mainwindow.cpp \
     fileEcryptionForm.cpp \
-    plainTextEncryptionForm.cpp
+    plainTextEncryptionForm.cpp \
+    tecipher.cpp
 
 HEADERS  += mainwindow.hpp \
     fileEcryptionForm.hpp \
-    plainTextEncryptionForm.hpp
+    plainTextEncryptionForm.hpp \
+    tecipher.hpp
 
 FORMS    += mainwindow.ui \
     fileecryptionform.ui \
