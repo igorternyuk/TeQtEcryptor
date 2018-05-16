@@ -341,7 +341,7 @@ bool TeCipher::encryptWithCombinedMethod(QByteArray &passphrase,
     }
     RSA* rsaPubKey = this->getPublicRSAKey(mPublicKey);
     QByteArray encryptedKey = this->enryptRSA(rsaPubKey, passphrase);
-    //this->freeRSAKey(rsaPubKey);
+    this->freeRSAKey(rsaPubKey);
     QByteArray encryptedData = this->encryptAES(passphrase, toEncrypt);
     if(encryptedData.isEmpty())
     {
@@ -379,10 +379,14 @@ bool TeCipher::decryptWithCombinedMethod(QByteArray &passphrase,
 
     RSA* privateKey = this->getPrivateRSAKey(mPrivateKey);
     QByteArray decryptedPassphrase = this->decryptRSA(privateKey, encryptedKey);
-    //this->freeRSAKey(privateKey);
+    this->freeRSAKey(privateKey);
 
     if(decryptedPassphrase != passphrase)
     {
+        qDebug() << "decryptedPassphrase:";
+        qDebug() << decryptedPassphrase;
+        qDebug() << "Your passphrase:";
+        qDebug() << passphrase;
         mLastError = "Wrong passphrase";
         qCritical() << mLastError;
         return false;

@@ -4,7 +4,6 @@
 #include <QMessageBox>
 #include <QFile>
 #include <QFileDialog>
-#include <QTextStream>
 #include <QStandardPaths>
 #include <QFileSystemModel>
 #include <QCompleter>
@@ -126,15 +125,15 @@ void FileEcryptionForm::on_btnDecrypt_clicked()
         return;
     }
 
-    QByteArray encryptedData;
-    if(!cipher.decryptWithCombinedMethod(passphrase, inputData, encryptedData))
+    QByteArray decryptedData;
+    if(!cipher.decryptWithCombinedMethod(passphrase, inputData, decryptedData))
     {
         QMessageBox::critical(this, "Decryption error",
                               cipher.getLastError());
         return;
     }
 
-    if(!cipher.writeFile(outputFilePath, encryptedData))
+    if(!cipher.writeFile(outputFilePath, decryptedData))
     {
         QMessageBox::critical(this, "Could not write the output file",
                               cipher.getLastError());
