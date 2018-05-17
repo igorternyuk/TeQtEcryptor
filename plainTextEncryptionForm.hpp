@@ -18,7 +18,6 @@ public:
 
 private slots:
     void on_btnEncrypt_clicked();
-
     void on_btnDecrypt_clicked();
 
 private:

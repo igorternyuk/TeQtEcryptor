@@ -54,11 +54,7 @@ void FileEcryptionForm::on_btnEncrypt_clicked()
         return;
     }
 
-    QByteArray passphrase;
-    passphrase.append(password);
-    QByteArray inputData;
     TeCipher cipher;
-    cipher.readFile(sourceFilePath, inputData);
 
     if(!cipher.loadPublicKeyByteArrayFromFile("public.pem"))
     {
@@ -67,21 +63,13 @@ void FileEcryptionForm::on_btnEncrypt_clicked()
         return;
     }
 
-    QByteArray encryptedData;
-
-    if(!cipher.encryptWithCombinedMethod(passphrase, inputData, encryptedData))
+    if(!cipher.encryptFileWithCombinedMethod(password, sourceFilePath, outputFilePath))
     {
-        QMessageBox::critical(this, "Encryption error",
+        QMessageBox::critical(this, "Error",
                               cipher.getLastError());
         return;
     }
 
-    if(!cipher.writeFile(outputFilePath, encryptedData))
-    {
-        QMessageBox::critical(this, "Could not write the output file",
-                              cipher.getLastError());
-        return;
-    }
     QMessageBox::information(this, "Success",
                              "The file was succssfully encrypted");
 }
@@ -112,11 +100,7 @@ void FileEcryptionForm::on_btnDecrypt_clicked()
         return;
     }
 
-    QByteArray passphrase;
-    passphrase.append(password);
-    QByteArray inputData;
     TeCipher cipher;
-    cipher.readFile(sourceFilePath, inputData);
 
     if(!cipher.loadPrivateKeyByteArrayFromFile("private.pem"))
     {
@@ -125,20 +109,13 @@ void FileEcryptionForm::on_btnDecrypt_clicked()
         return;
     }
 
-    QByteArray decryptedData;
-    if(!cipher.decryptWithCombinedMethod(passphrase, inputData, decryptedData))
+    if(!cipher.decryptFileWithCombinedMethod(password, sourceFilePath,
+                                             outputFilePath))
     {
-        QMessageBox::critical(this, "Decryption error",
-                              cipher.getLastError());
+        QMessageBox::critical(this, "Error", cipher.getLastError());
         return;
     }
 
-    if(!cipher.writeFile(outputFilePath, decryptedData))
-    {
-        QMessageBox::critical(this, "Could not write the output file",
-                              cipher.getLastError());
-        return;
-    }
     QMessageBox::information(this, "Success",
                              "The file was succssfully decrypted");
 }

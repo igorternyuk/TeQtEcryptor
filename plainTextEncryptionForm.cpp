@@ -34,9 +34,6 @@ void PlainTextEncryptionForm::on_btnEncrypt_clicked()
         return;
     }
 
-    QByteArray passphrase;
-    passphrase.append(password);
-
     TeCipher cipher;
 
     if(!cipher.loadPublicKeyByteArrayFromFile("public.pem"))
@@ -46,18 +43,17 @@ void PlainTextEncryptionForm::on_btnEncrypt_clicked()
         return;
     }
 
-    QByteArray inputData;
-    inputData.append(textToEcrypt);
-    QByteArray encryptedData;
-    qDebug() << "Trying to encrypt with password: " << passphrase;
-    if(!cipher.encryptWithCombinedMethod(passphrase, inputData, encryptedData))
+    QString encryptedText;
+    //qDebug() << "Trying to encrypt with password: " << passphrase;
+    if(!cipher.encryptPlainTextWithCombinedMethod(password, textToEcrypt,
+                                                  encryptedText))
     {
         QMessageBox::critical(this, "Encryption error",
                               cipher.getLastError());
         return;
     }
-    qDebug() << "encryptedData:" << encryptedData.toBase64();
-    ui->textEditOutput->setText(encryptedData.toBase64());
+    //qDebug() << "encryptedData:" << encryptedData.toBase64();
+    ui->textEditOutput->setText(encryptedText);
     QMessageBox::information(this, "Success",
                              "The text was succssfully encrypted");
 
@@ -82,9 +78,6 @@ void PlainTextEncryptionForm::on_btnDecrypt_clicked()
         return;
     }
 
-    QByteArray passphrase;
-    passphrase.append(password);
-
     TeCipher cipher;
 
     if(!cipher.loadPrivateKeyByteArrayFromFile("private.pem"))
@@ -94,18 +87,16 @@ void PlainTextEncryptionForm::on_btnDecrypt_clicked()
         return;
     }
 
-    QByteArray buffer;
-    buffer.append(textToDecrypt);
-    QByteArray inputData = QByteArray::fromBase64(buffer);
-    QByteArray decryptedData;
+    QString decryptedText;
 
-    if(!cipher.decryptWithCombinedMethod(passphrase, inputData, decryptedData))
+    if(!cipher.decryptPlainTextWithCombinedMethod(password, textToDecrypt,
+                                                  decryptedText))
     {
         QMessageBox::critical(this, "Decryption error",
                               cipher.getLastError());
         return;
     }
-    ui->textEditOutput->setText(decryptedData);
+    ui->textEditOutput->setText(decryptedText);
     QMessageBox::information(this, "Success",
                              "The file was succssfully decrypted");
 }
